@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { createContext, useContext, useState } from "react";
 import { GoogleGenAI, Type } from "@google/genai";
 
@@ -16,12 +16,23 @@ interface InterviewContextProps {
   fetchQuestions: (jobDesc: string) => Promise<void>;
   setAnswer: (answer: string) => void;
   nextQuestion: () => void;
+  getInterviewFeedback: () => Promise<{
+    feedback: string;
+    soi: string;
+    tips: string[];
+    score: number;
+  } | null>;
+
   resetInterview: () => void;
 }
 
 const InterviewContext = createContext<InterviewContextProps | null>(null);
 
-export const InterviewProvider = ({ children }: { children: React.ReactNode }) => {
+export const InterviewProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [questions, setQuestions] = useState<string[]>([]);
   const [answers, setAnswers] = useState<string[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -35,7 +46,7 @@ export const InterviewProvider = ({ children }: { children: React.ReactNode }) =
     try {
       const response = await genAI.models.generateContent({
         model: "gemini-2.5-flash-lite-preview-06-17",
-        contents: `Generate 5-10 realistic mock interview questions based on the following job description:\n\n"${jobDesc}"`,
+        contents: `Act as a interview panelist and ask between 2-6 realistic ( not implementation type questions ) questions based on the following job description:\n\n"${jobDesc}"`,
         config: {
           responseMimeType: "application/json",
           responseSchema: {
@@ -73,6 +84,52 @@ export const InterviewProvider = ({ children }: { children: React.ReactNode }) =
     }
   };
 
+  const getInterviewFeedback = async (): Promise<{
+    feedback: string;
+    soi: string;
+    tips: string[];
+    score: number;
+  } | null> => {
+    setLoading(true);
+    try {
+      const qa = questions
+        .map((q, i) => `Q${i + 1}: ${q}\nA${i + 1}: ${answers[i]}`)
+        .join("\n");
+
+      const prompt = `
+Analyze the mock interview below and return a JSON object with:
+- feedback (max 25 words)
+- soi (scope of improvement, max 30 words)
+- tips (1 to 4 short strings)
+- score (number between 1-10)
+
+Only return valid JSON. No explanation. No formatting.
+
+${qa}
+    `.trim();
+
+      const response = await genAI.models.generateContent({
+        model: "gemini-2.5-flash-lite-preview-06-17",
+        contents: prompt,
+      });
+
+      const text = response.text?.trim();
+      if (!text) return null;
+
+      const jsonStart = text.indexOf("{");
+      const jsonEnd = text.lastIndexOf("}") + 1;
+      const jsonString = text.slice(jsonStart, jsonEnd);
+
+      const result = JSON.parse(jsonString);
+      return result;
+    } catch (err) {
+      console.error("Gemini feedback error:", err);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const resetInterview = () => {
     setQuestions([]);
     setAnswers([]);
@@ -91,6 +148,7 @@ export const InterviewProvider = ({ children }: { children: React.ReactNode }) =
         fetchQuestions,
         setAnswer,
         nextQuestion,
+        getInterviewFeedback,
         resetInterview,
       }}
     >
