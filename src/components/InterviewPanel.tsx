@@ -4,6 +4,7 @@ import { Mic, Type, Send } from "lucide-react";
 import VoiceInput from "./VoiceInput"; // import the new component
 import { useInterview } from "../context/InterviewContext";
 import FeedbackBox from "./FeedbackBox";
+import { generateFeedbackPDF } from "@/utils/generateFeedbackPDF";
 
 export default function InterviewPanel() {
   const {
@@ -19,8 +20,17 @@ export default function InterviewPanel() {
   const [currentAnswer, setCurrentAnswer] = useState("");
   const [inputMode, setInputMode] = useState<"text" | "voice">("voice");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [result, setResult] = useState(false);
-  const [feedback, setFeedback] = useState<any>();
+  const [result, setResult] = useState(true);
+  const [feedback, setFeedback] = useState<any>({"feedback": "Basic understanding shown but lacks detail.",
+  "soi": "Complete all answers and improve explanation clarity.",
+  "tips": [
+    "Don't skip questions",
+    "Give real examples",
+    "Explain reasoning",
+    "Be clear and concise"
+  ],
+  "score": 4
+});
 
   const handleSubmit = async () => {
     const trimmed = currentAnswer.trim();
@@ -52,12 +62,20 @@ export default function InterviewPanel() {
       {result && feedback ? (
         <>
           <FeedbackBox feedback={feedback} />
-          <button
-            onClick={resetInterview}
-            className="ml-auto flex items-center justify-end bg-(--accent) text-(--accent-foreground) px-4 py-2 rounded-xl hover:bg-(--accent)/90 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed transition-colors"
-          >
-            Practice more
-          </button>
+          <div className="ml-auto justify-end flex gap-4 mt-4 text-base">
+            <button
+              onClick={() => generateFeedbackPDF(questions, answers, feedback)}
+              className="flex items-center justify-end bg-(--secondary) text-(--accent-foreground) px-4 py-2 rounded-xl hover:bg-(--secondary)/90 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed transition-colors"
+            >
+              Download PDF Feedback
+            </button>
+            <button
+              onClick={resetInterview}
+              className="flex items-center justify-end bg-(--accent) text-(--accent-foreground) px-4 py-2 rounded-xl hover:bg-(--accent)/90 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed transition-colors"
+            >
+              Practice more
+            </button>
+          </div>
         </>
       ) : (
         <>
@@ -140,6 +158,7 @@ export default function InterviewPanel() {
                 }`}
               >
                 <VoiceInput
+                  resetTrigger={activeIndex}
                   setCurrentAnswer={setCurrentAnswer}
                   isProcessing={isProcessing}
                   setIsProcessing={setIsProcessing}

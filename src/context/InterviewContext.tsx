@@ -46,7 +46,7 @@ export const InterviewProvider = ({
     try {
       const response = await genAI.models.generateContent({
         model: "gemini-2.5-flash-lite-preview-06-17",
-        contents: `Act as a interview panelist and ask between 2-6 realistic ( not implementation type questions ) questions based on the following job description:\n\n"${jobDesc}"`,
+        contents: `Act as a interview panelist and ask between 1-2 realistic ( not implementation type questions ) questions based on the following job description:\n\n"${jobDesc}"`,
         config: {
           responseMimeType: "application/json",
           responseSchema: {
@@ -131,10 +131,11 @@ ${qa}
   };
 
   const resetInterview = () => {
-    setQuestions([]);
-    setAnswers([]);
-    setActiveIndex(0);
-    setDisabled(false);
+    window.location.reload();
+    // setQuestions([]);
+    // setAnswers([]);
+    // setActiveIndex(0);
+    // setDisabled(false);
   };
 
   return (

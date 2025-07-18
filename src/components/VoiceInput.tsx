@@ -6,12 +6,14 @@ import { transcribeAudioFile } from "@/utils/transcribEl";
 import { transcribeWithSarvam } from "@/utils/transcribeSarvam";
 
 type VoiceInputProps = {
+  resetTrigger: number;
   setCurrentAnswer: (text: string) => void;
   isProcessing: boolean;
   setIsProcessing: (val: boolean) => void;
 };
 
 export default function VoiceInput({
+  resetTrigger,
   setCurrentAnswer,
   isProcessing,
   setIsProcessing,
@@ -27,6 +29,14 @@ export default function VoiceInput({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // reset
+  useEffect(() => {
+    setIsRecording(false);
+    setAudioBlob(null);
+    setTranscriptedText("");
+    setDuration(0);
+  }, [resetTrigger]);
 
   useEffect(() => {
     return () => {
