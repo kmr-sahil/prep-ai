@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   description: "Mock interviews powered by AI",
 };
 
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,6 +29,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative w-full mx-auto p-[0.8rem]`}
       >

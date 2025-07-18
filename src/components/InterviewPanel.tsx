@@ -5,6 +5,8 @@ import VoiceInput from "./VoiceInput"; // import the new component
 import { useInterview } from "../context/InterviewContext";
 import FeedbackBox from "./FeedbackBox";
 import { generateFeedbackPDF } from "@/utils/generateFeedbackPDF";
+import { TextEffect } from "./TextAnimation";
+import CustomButton from "./CustomButton";
 
 export default function InterviewPanel() {
   const {
@@ -20,17 +22,8 @@ export default function InterviewPanel() {
   const [currentAnswer, setCurrentAnswer] = useState("");
   const [inputMode, setInputMode] = useState<"text" | "voice">("voice");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [result, setResult] = useState(true);
-  const [feedback, setFeedback] = useState<any>({"feedback": "Basic understanding shown but lacks detail.",
-  "soi": "Complete all answers and improve explanation clarity.",
-  "tips": [
-    "Don't skip questions",
-    "Give real examples",
-    "Explain reasoning",
-    "Be clear and concise"
-  ],
-  "score": 4
-});
+  const [result, setResult] = useState(false);
+  const [feedback, setFeedback] = useState<any>();
 
   const handleSubmit = async () => {
     const trimmed = currentAnswer.trim();
@@ -95,7 +88,9 @@ export default function InterviewPanel() {
 
           <div className="mb-6 px-3 py-2 bg-(--accent)/20 border-dashed border border-(--text)/10 rounded-lg">
             <p className="text-[1.1rem] font-normal text-(--text)">
-              {questions[activeIndex]}
+              <TextEffect per="word" as="span" preset="fade" key={activeIndex}>
+                {questions[activeIndex]}
+              </TextEffect>
             </p>
           </div>
 
@@ -168,27 +163,16 @@ export default function InterviewPanel() {
           )}
 
           {/* Submit */}
-          <button
+          <CustomButton
             onClick={handleSubmit}
-            disabled={isProcessing || currentAnswer == ""}
-            className="ml-auto flex items-center justify-end bg-(--accent) text-(--accent-foreground) px-4 py-2 rounded-xl hover:bg-(--accent)/90 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed transition-colors"
-          >
-            {isProcessing ? (
-              <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                <span>Processing...</span>
-              </>
-            ) : (
-              <>
-                {/* <Send size={18} /> */}
-                <span>
-                  {activeIndex < questions.length - 1
-                    ? "Next Question"
-                    : "Finish Interview"}
-                </span>
-              </>
-            )}
-          </button>
+            disabled={isProcessing }
+            loading={isProcessing}
+            title={
+              activeIndex === questions.length - 1
+                ? "Submit & Get Feedback"
+                : "Next"
+            }
+          />
         </>
       )}
     </div>

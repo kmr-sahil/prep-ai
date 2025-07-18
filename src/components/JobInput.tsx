@@ -1,14 +1,18 @@
 "use client";
 import React, { useState } from "react";
 import { useInterview } from "../context/InterviewContext";
+import CustomButton from "./CustomButton";
 
 export default function JobInput() {
   const [input, setInput] = useState("");
   const { fetchQuestions, loading, disabled } = useInterview();
+  const [buttonLocked, setButtonLocked] = useState(false);
 
   const handleSubmit = () => {
     if (!input.trim()) return;
     fetchQuestions(input);
+    setInput("");
+    setButtonLocked(true); // Lock the button permanently after submit
   };
 
   return (
@@ -23,17 +27,18 @@ export default function JobInput() {
       />
 
       <div className="flex justify-end mt-2 mb-1 pr-4">
-        <button
+        <CustomButton
+          title={
+            loading
+              ? "Generating..."
+              : buttonLocked
+              ? "Submitted"
+              : "Generate Questions"
+          }
+          loading={loading}
           onClick={handleSubmit}
-          disabled={loading || disabled}
-          className="bg-(--accent) text-(--accent-foreground) px-4 py-2 rounded-xl hover:bg-(--accent)/90 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed transition-colors"
-        >
-          {loading
-            ? "Generating..."
-            : disabled
-            ? "Please wait..."
-            : "Generate Questions"}
-        </button>
+          disabled={buttonLocked}
+        />
       </div>
     </div>
   );

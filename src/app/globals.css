@@ -1,45 +1,40 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fafafa;
+  --background: #f2f2f2;
   --muted: #f4f4f5;
-  --accent: #f6803b;
+  --accent: #4CAF50; /* Balanced green */
   --primary: #18181b;
   --secondary: #e4e4e7;
   --tertiary: #eeeef2;
   --foreground: #1a1a1a;
   --text: #18181b;
-  
+
   --muted-foreground: #71717a;
-  
   --accent-foreground: #f8fafc;
-  
+
   --primary-foreground: #fafafa;
-  
   --secondary-foreground: #27272a;
-  
+
   --text-muted: #6b7280;
 }
 
 .dark {
   --background: #0c0c0c;
-   --muted: #1c1c1c;
-   --accent: #f6803b;
-   --primary: #f4f4f5;
-   --secondary: #27272a;
-   --tertiary: #2c2c2f;
-   --text: #f4f4f5;
+  --muted: #1c1c1c;
+  --accent: #388E3C; /* ~20% darker green */
+  --primary: #f4f4f5;
+  --secondary: #27272a;
+  --tertiary: #2c2c2f;
+  --text: #f4f4f5;
 
   --foreground: #f1f1f1;
- 
+
   --muted-foreground: #a1a1aa;
-  
-  --accent-foreground: #f1f5f9;
-  
+  --accent-foreground: #e8f5e9; /* Light green tint */
   --primary-foreground: #0a0a0a;
-  
   --secondary-foreground: #e4e4e7;
-  
+
   --text-muted: #9ca3af;
 }
 
@@ -49,8 +44,8 @@
     --foreground: #f1f1f1;
     --muted: #1c1c1c;
     --muted-foreground: #a1a1aa;
-    --accent: #f6803b;
-    --accent-foreground: #f1f5f9;
+    --accent: #388E3C;
+    --accent-foreground: #e8f5e9;
     --primary: #f4f4f5;
     --primary-foreground: #0a0a0a;
     --secondary: #27272a;
@@ -60,8 +55,13 @@
   }
 }
 
-/* If you need these custom properties for components */
+:root {
+  --font-geist-sans: 'Geist', sans-serif;
+  --font-geist-mono: 'Geist Mono', monospace;
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);
+  font-family: var(--font-geist-sans);
 }
