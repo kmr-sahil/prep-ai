@@ -1,6 +1,9 @@
 "use client";
 import React, { createContext, useContext, useState } from "react";
 import { GoogleGenAI, Type } from "@google/genai";
+import { decrementCredit } from "@/utils/updateCredits";
+import { useAuth } from "./AuthContext";
+import { basic } from "@/constants/getQuestionsPrompt";
 
 // Setup Gemini
 const genAI = new GoogleGenAI({
@@ -33,6 +36,7 @@ export const InterviewProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const {profile} = useAuth();
   const [questions, setQuestions] = useState<string[]>([]);
   const [answers, setAnswers] = useState<string[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -46,7 +50,7 @@ export const InterviewProvider = ({
     try {
       const response = await genAI.models.generateContent({
         model: "gemini-2.5-flash-lite-preview-06-17",
-        contents: `Act as a interview panelist and ask between 1-2 realistic ( not implementation type questions ) questions based on the following job description:\n\n"${jobDesc}"`,
+        contents: `${basic} ${jobDesc}"`,
         config: {
           responseMimeType: "application/json",
           responseSchema: {
@@ -56,7 +60,11 @@ export const InterviewProvider = ({
         },
       });
 
+      // decrement the credit
+      await decrementCredit(profile?.credits || 0)
+
       const json = JSON.parse(response.text || "[]");
+
       if (Array.isArray(json)) {
         setQuestions(json);
         setAnswers(new Array(json.length).fill(""));

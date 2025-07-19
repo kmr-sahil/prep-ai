@@ -55,10 +55,10 @@ export default function InterviewPanel() {
       {result && feedback ? (
         <>
           <FeedbackBox feedback={feedback} />
-          <div className="ml-auto justify-end flex gap-4 mt-4 text-base">
+          <div className="ml-auto justify-end flex gap-4 mt-4 text-sm">
             <button
               onClick={() => generateFeedbackPDF(questions, answers, feedback)}
-              className="flex items-center justify-end bg-(--secondary) text-(--accent-foreground) px-4 py-2 rounded-xl hover:bg-(--secondary)/90 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed transition-colors"
+              className="flex items-center justify-end bg-(--secondary) text-(--text) px-4 py-2 rounded-xl hover:bg-(--secondary)/90 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed transition-colors"
             >
               Download PDF Feedback
             </button>

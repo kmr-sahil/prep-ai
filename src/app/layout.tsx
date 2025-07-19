@@ -5,7 +5,7 @@ import { InterviewProvider } from "@/context/InterviewContext";
 import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { AuthProvider } from "@/context/AuthContext";
-import AuthModal from "@/components/AuthModal";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,6 +35,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative w-full mx-auto p-[0.8rem]`}
       >
+        <Toaster position="bottom-center" />
         <ThemeProvider attribute="class">
           <ThemeToggle />
           <AuthProvider>

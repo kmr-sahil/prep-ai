@@ -14,7 +14,7 @@ function Navbar() {
   };
 
   return (
-    <div className="fixed w-full top-5 flex justify-between max-w-[30rem] rounded-md bg-(--muted) px-4 py-2 ">
+    <div className="fixed w-full top-5 flex justify-between max-w-[30rem] rounded-2xl bg-(--muted) border border-(--secondary) px-4 py-2 ">
       <div className="flex gap-2 items-center justify-center">
         <img src="/logo.svg" alt="" className="w-6 h-6 " />
         <h5 className="text-base font-medium leading-[1rem]">prep-ai</h5>
