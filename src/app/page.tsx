@@ -1,13 +1,14 @@
+import AuthModal from "@/components/AuthModal";
 import InterviewPanel from "@/components/InterviewPanel";
 import JobInput from "@/components/JobInput";
+import Navbar from "@/components/Navbar";
 
 export default function Home() {
   return (
-    <div className="flex items-center min-h-screen flex-col flex-grow gap-4 py-6 w-[100%] max-w-[48rem] mx-auto relative">
-      <div className="flex gap-2 items-center justify-center">
-        <img src="/logo.svg" alt="" className="w-6 h-6 " />
-        <h5 className="text-base font-medium leading-[1rem]">prep-ai</h5>
-      </div>
+    <div className="flex items-center min-h-screen flex-col flex-grow gap-4 pt-[5rem] w-[100%] max-w-[48rem] mx-auto relative">
+      <AuthModal />
+      <Navbar />
+      
 
       <div className="max-w-[30rem] flex flex-col items-center justify-center mt-[4rem] mb-[4rem] text-center gap-4 px-[1rem]">
         <span></span>

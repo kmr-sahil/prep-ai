@@ -4,6 +4,8 @@ import "./globals.css";
 import { InterviewProvider } from "@/context/InterviewContext";
 import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { AuthProvider } from "@/context/AuthContext";
+import AuthModal from "@/components/AuthModal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,8 +22,6 @@ export const metadata: Metadata = {
   description: "Mock interviews powered by AI",
 };
 
-
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,7 +37,9 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class">
           <ThemeToggle />
-          <InterviewProvider>{children}</InterviewProvider>
+          <AuthProvider>
+            <InterviewProvider>{children}</InterviewProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

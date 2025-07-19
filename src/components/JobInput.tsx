@@ -2,13 +2,20 @@
 import React, { useState } from "react";
 import { useInterview } from "../context/InterviewContext";
 import CustomButton from "./CustomButton";
+import { useAuth } from "@/context/AuthContext";
 
 export default function JobInput() {
   const [input, setInput] = useState("");
   const { fetchQuestions, loading, disabled } = useInterview();
+  const { isLoggedIn, openAuthModal } = useAuth();
   const [buttonLocked, setButtonLocked] = useState(false);
 
   const handleSubmit = () => {
+    if (!isLoggedIn) {
+      openAuthModal();
+      return;
+    }
+
     if (!input.trim()) return;
     fetchQuestions(input);
     setInput("");
@@ -22,7 +29,7 @@ export default function JobInput() {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="Paste your job description..."
-        className="w-full px-4 py-3 bg-background  rounded-lg focus:border-accent focus:outline-none resize-none"
+        className="w-full px-4 py-3 bg-background rounded-lg focus:border-accent focus:outline-none resize-none"
         rows={5}
       />
 
@@ -37,7 +44,7 @@ export default function JobInput() {
           }
           loading={loading}
           onClick={handleSubmit}
-          disabled={buttonLocked}
+          disabled={buttonLocked || input == ""}
         />
       </div>
     </div>
