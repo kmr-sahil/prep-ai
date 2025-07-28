@@ -56,8 +56,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
             // Insert default profile if not found
             await supabase
               .from("users")
-              .insert([{ id: session.user.id, credits: 1 }]);
-            setProfile({ credits: 1 });
+              .insert([{ id: session.user.id, credits: 2 }]);
+            setProfile({ credits: 2 });
           } else {
             setProfile(data);
           }
