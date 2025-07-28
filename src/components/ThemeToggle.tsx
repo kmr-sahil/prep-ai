@@ -16,7 +16,7 @@ export function ThemeToggle() {
 
   return (
     <span
-      className="cursor-pointer fixed bottom-4 right-4 z-50 p-3"
+      className="cursor-pointer fixed bottom-4 right-4 z-50 p-3 bg-(--background)"
       onClick={() => setTheme(resolvedTheme === "light" ? "dark" : "light")}
     >
       {resolvedTheme === "light" ? <Moon size={16} /> : <Sun size={16} />}

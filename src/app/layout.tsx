@@ -6,6 +6,8 @@ import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "react-hot-toast";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +33,8 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+
+        <script async src="https://tally.so/widgets/embed.js"></script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative w-full mx-auto p-[0.8rem]`}
@@ -39,7 +43,11 @@ export default function RootLayout({
         <ThemeProvider attribute="class">
           <ThemeToggle />
           <AuthProvider>
-            <InterviewProvider>{children}</InterviewProvider>
+            <InterviewProvider>
+              <Navbar />
+              {children}
+            </InterviewProvider>
+            <Footer />
           </AuthProvider>
         </ThemeProvider>
       </body>

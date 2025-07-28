@@ -4,6 +4,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { Mic, MicOff, Play, RotateCcw } from "lucide-react";
 import { transcribeAudioFile } from "@/utils/transcribEl";
 import { transcribeWithSarvam } from "@/utils/transcribeSarvam";
+import { useAuth } from "@/context/AuthContext";
 
 type VoiceInputProps = {
   resetTrigger: number;
@@ -18,11 +19,13 @@ export default function VoiceInput({
   isProcessing,
   setIsProcessing,
 }: VoiceInputProps) {
+  const { hasCredits } = useAuth();
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [transcriptedText, setTranscriptedText] = useState("");
   const [duration, setDuration] = useState(0);
   const durationRef = useRef(0);
+  
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -181,7 +184,9 @@ export default function VoiceInput({
             </button>
             <button
               onClick={retryRecording}
-              className="flex items-center space-x-2 px-3 py-1 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+              disabled={hasCredits > 2}
+              title="You need PRO to retry"
+              className="flex items-center space-x-2 px-3 py-1 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50"
             >
               <RotateCcw size={14} />
               <span>Retry</span>

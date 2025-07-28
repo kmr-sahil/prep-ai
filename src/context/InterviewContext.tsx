@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState } from "react";
 import { GoogleGenAI, Type } from "@google/genai";
 import { decrementCredit } from "@/utils/updateCredits";
 import { useAuth } from "./AuthContext";
-import { basic } from "@/constants/getQuestionsPrompt";
+import { general, threeToFive, fiveToTen } from "@/constants/getQuestionsPrompt";
 
 // Setup Gemini
 const genAI = new GoogleGenAI({
@@ -16,7 +16,7 @@ interface InterviewContextProps {
   activeIndex: number;
   loading: boolean;
   disabled: boolean;
-  fetchQuestions: (jobDesc: string) => Promise<void>;
+  fetchQuestions: (jobDesc: string, numberOfQuestions: number) => Promise<void>;
   setAnswer: (answer: string) => void;
   nextQuestion: () => void;
   getInterviewFeedback: () => Promise<{
@@ -43,14 +43,14 @@ export const InterviewProvider = ({
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(false);
 
-  const fetchQuestions = async (jobDesc: string) => {
+  const fetchQuestions = async (jobDesc: string, numberOfQuestions: number) => {
     if (disabled) return;
     setDisabled(true);
     setLoading(true);
     try {
       const response = await genAI.models.generateContent({
         model: "gemini-2.5-flash-lite-preview-06-17",
-        contents: `${basic} ${jobDesc}"`,
+        contents: `${general} ${numberOfQuestions <= 3 ? threeToFive : fiveToTen} ${jobDesc} "`,
         config: {
           responseMimeType: "application/json",
           responseSchema: {
