@@ -7,6 +7,7 @@ import FeedbackBox from "./FeedbackBox";
 import { generateFeedbackPDF } from "@/utils/generateFeedbackPDF";
 import { TextEffect } from "./TextAnimation";
 import CustomButton from "./CustomButton";
+import Link from "next/link";
 
 export default function InterviewPanel() {
   const {
@@ -17,6 +18,7 @@ export default function InterviewPanel() {
     nextQuestion,
     getInterviewFeedback,
     resetInterview,
+    loading,
   } = useInterview();
 
   const [currentAnswer, setCurrentAnswer] = useState("");
@@ -55,19 +57,23 @@ export default function InterviewPanel() {
       {result && feedback ? (
         <>
           <FeedbackBox feedback={feedback} />
-          <div className="ml-auto justify-end flex gap-4 mt-4 text-sm">
-            <button
+          <div className="ml-auto justify-end flex flex-col md:flex-row gap-2 md:gap-4 mt-8 text-sm">
+            <Link
+              href={"https://tally.so/r/3lkVQB"}
+              className=" text-sm sm:text-base flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-(--secondary) text-(--text) border-(--muted)/10 hover:bg-(--secondary)/90 cursor-pointer transition-colors"
+            >
+              <Send size={12} />
+              Help us Improve
+            </Link>
+            <CustomButton
+              title="Download PDF Feedback"
+              styleType="secondary"
               onClick={() => generateFeedbackPDF(questions, answers, feedback)}
-              className="flex items-center justify-end bg-(--secondary) text-(--text) px-4 py-2 rounded-xl hover:bg-(--secondary)/90 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed transition-colors"
-            >
-              Download PDF Feedback
-            </button>
-            <button
-              onClick={resetInterview}
-              className="flex items-center justify-end bg-(--accent) text-(--accent-foreground) px-4 py-2 rounded-xl hover:bg-(--accent)/90 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed transition-colors"
-            >
-              Practice more
-            </button>
+            />
+            <CustomButton
+              title="Practice more"
+              onClick={() => resetInterview()}
+            />
           </div>
         </>
       ) : (
@@ -164,9 +170,10 @@ export default function InterviewPanel() {
 
           {/* Submit */}
           <CustomButton
+            className="ml-auto"
             onClick={handleSubmit}
-            disabled={isProcessing }
-            loading={isProcessing}
+            disabled={isProcessing || loading}
+            loading={isProcessing || loading}
             title={
               activeIndex === questions.length - 1
                 ? "Submit & Get Feedback"

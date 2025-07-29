@@ -143,7 +143,7 @@ export default function VoiceInput({
   };
 
   return (
-    <div className="min-h-[10rem] flex flex-col justify-center items-center border border-gray-300 rounded-lg p-4 mb-4">
+    <div className="min-h-[10rem] flex flex-col justify-center items-center border-2 border-(--tertiary) rounded-lg p-4 mb-4">
       {!isRecording && !audioBlob ? (
         <div className="text-center">
           <button

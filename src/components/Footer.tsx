@@ -3,7 +3,7 @@ import React from "react";
 
 function Footer() {
   return (
-    <div className="max-w-[48rem] mx-auto w-full flex flex-col gap-4 sm:flex-row items-start justify-between text-xs text-(--text) my-4">
+    <div className="max-w-[48rem] mx-auto w-full flex flex-col gap-4 sm:flex-row items-start justify-between text-xs text-(--text) mt-[8rem] mb-[3rem] px-[1rem]">
       <Link href="/pricing">Pricing</Link>
       <div className="flex flex-col items-start">
         <p>

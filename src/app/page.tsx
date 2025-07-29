@@ -11,7 +11,7 @@ export default function Home() {
       <div className="max-w-[30rem] flex flex-col items-center justify-center mt-[4rem] mb-[4rem] text-center gap-4 px-[1rem]">
         <Link
           href="/pricing"
-          className="text-xs bg-(--accent)/10 px-3 py-1 rounded-full border border-(--accent) mb-4"
+          className="text-xs bg-(--accent)/10 px-3 py-1 rounded-full border border-(--accent)/70 mb-4"
         >
           Beta Limited release — click to get more credits ?
         </Link>

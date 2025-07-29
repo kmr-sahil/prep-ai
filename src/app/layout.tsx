@@ -34,7 +34,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/logo.svg" type="image/svg+xml" />
 
-        <script async src="https://tally.so/widgets/embed.js"></script>
+        
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative w-full mx-auto p-[0.8rem]`}

@@ -105,7 +105,7 @@ export const InterviewProvider = ({
         .join("\n");
 
       const prompt = `
-Analyze the mock interview below and return a JSON object with:
+Analyze the mock interview below, don't be strict, sound friendly and return a JSON object with:
 - feedback (max 25 words)
 - soi (scope of improvement, max 30 words)
 - tips (1 to 4 short strings)

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { BadgeAlert, BadgeInfo, LogOut, Mail } from "lucide-react";
 import { supabase } from "@/utils/supabase";
+import Link from "next/link";
 
 function Navbar() {
   const { user, profile, isLoggedIn, openAuthModal } = useAuth();
@@ -18,7 +19,9 @@ function Navbar() {
       <div className="w-full flex justify-between max-w-[30rem] mx-[1rem] rounded-2xl bg-(--muted) border border-(--secondary) px-4 py-2 ">
         <div className="flex gap-2 items-center justify-center">
           <img src="/logo.svg" alt="" className="w-6 h-6 " />
-          <h5 className="text-base font-medium leading-[1rem]">prep-ai</h5>
+          <Link className="text-base font-medium leading-[1rem]" href="/">
+            prep-ai
+          </Link>
         </div>
         <div>
           {isLoggedIn ? (

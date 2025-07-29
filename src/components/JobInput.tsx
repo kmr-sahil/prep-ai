@@ -11,7 +11,7 @@ import { jobTitleTags, difficultyTags } from "@/constants/tags";
 export default function JobInput() {
   const router = useRouter();
   const [input, setInput] = useState<string>("");
-  const { fetchQuestions, loading, disabled } = useInterview();
+  const { fetchQuestions, loading, questions, disabled } = useInterview();
   const { isLoggedIn, openAuthModal, hasCredits } = useAuth();
 
   const [buttonLocked, setButtonLocked] = useState<boolean>(false);
@@ -96,9 +96,11 @@ export default function JobInput() {
     setButtonLocked(true); // Lock the button permanently after submit
   };
 
-  useEffect(() => {
-    console.log(input);
-  }, [input]);
+  // useEffect(() => {
+  //   console.log(input);
+  // }, [input]);
+
+  if (questions.length) return null;
 
   return (
     <div className="w-full relative flex flex-col px-2 py-2 rounded-3xl bg-(--muted) border border-(--secondary) text-(--text)">
