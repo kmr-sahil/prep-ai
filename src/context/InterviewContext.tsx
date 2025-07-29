@@ -3,11 +3,11 @@ import React, { createContext, useContext, useState } from "react";
 import { GoogleGenAI, Type } from "@google/genai";
 import { decrementCredit } from "@/utils/updateCredits";
 import { useAuth } from "./AuthContext";
-import { general, threeToFive, fiveToTen } from "@/constants/getQuestionsPrompt";
+import { general, threeToFive, fiveToTen, feedbackPrompt } from "@/constants/getQuestionsPrompt";
 
 // Setup Gemini
 const genAI = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY || "YOUR_API_KEY_HERE",
+  apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY || "YOUR_API_KEY_HERE",
 });
 
 interface InterviewContextProps {
@@ -37,7 +37,7 @@ export const InterviewProvider = ({
   children: React.ReactNode;
 }) => {
   const {profile} = useAuth();
-  const [questions, setQuestions] = useState<string[]>([]);
+  const [questions, setQuestions] = useState<string[]>(["How are ypiu mff ?"]);
   const [answers, setAnswers] = useState<string[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -49,7 +49,7 @@ export const InterviewProvider = ({
     setLoading(true);
     try {
       const response = await genAI.models.generateContent({
-        model: "gemini-2.5-flash-lite-preview-06-17",
+        model: "gemini-2.0-flash-lite",
         contents: `${general} ${numberOfQuestions <= 3 ? threeToFive : fiveToTen} ${jobDesc} "`,
         config: {
           responseMimeType: "application/json",
@@ -104,17 +104,7 @@ export const InterviewProvider = ({
         .map((q, i) => `Q${i + 1}: ${q}\nA${i + 1}: ${answers[i]}`)
         .join("\n");
 
-      const prompt = `
-Analyze the mock interview below, don't be strict, sound friendly and return a JSON object with:
-- feedback (max 25 words)
-- soi (scope of improvement, max 30 words)
-- tips (1 to 4 short strings)
-- score (number between 1-10)
-
-Only return valid JSON. No explanation. No formatting.
-
-${qa}
-    `.trim();
+      const prompt = ` ${feedbackPrompt} ${qa} `.trim();
 
       const response = await genAI.models.generateContent({
         model: "gemini-2.5-flash-lite-preview-06-17",

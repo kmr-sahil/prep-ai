@@ -11,6 +11,7 @@ export function useAudioRecorder(onStop: (audio: Blob, duration: number) => void
   const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const MAX_DURATION = 100
 
   useEffect(() => {
     return () => {
@@ -19,14 +20,19 @@ export function useAudioRecorder(onStop: (audio: Blob, duration: number) => void
     };
   }, []);
 
-  const startTimer = () => {
-    timerRef.current = setInterval(() => {
-      setDuration((prev) => {
-        durationRef.current = prev + 1;
-        return prev + 1;
-      });
-    }, 1000);
-  };
+const startTimer = () => {
+  timerRef.current = setInterval(() => {
+    setDuration((prev) => {
+      const next = prev + 1;
+      durationRef.current = next;
+      // Auto-stop recording when max reached
+      if (next >= MAX_DURATION) {
+        stopRecording();
+      }
+      return next;
+    });
+  }, 1000);
+};
 
   const stopTimer = () => {
     if (timerRef.current) {

@@ -1,13 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import { Mic, Type, Send } from "lucide-react";
-import VoiceInput from "./VoiceInput"; // import the new component
 import { useInterview } from "../context/InterviewContext";
 import FeedbackBox from "./FeedbackBox";
 import { generateFeedbackPDF } from "@/utils/generateFeedbackPDF";
 import { TextEffect } from "./TextAnimation";
 import CustomButton from "./CustomButton";
 import Link from "next/link";
+import VoiceInput from "./VoiceInput/VoiceInput";
+import toast from "react-hot-toast";
 
 export default function InterviewPanel() {
   const {
@@ -30,7 +31,7 @@ export default function InterviewPanel() {
   const handleSubmit = async () => {
     const trimmed = currentAnswer.trim();
     if (!trimmed) {
-      alert("Please provide an answer before submitting.");
+      toast.error("Please provide an answer before submitting.");
       return;
     }
 
@@ -102,10 +103,8 @@ export default function InterviewPanel() {
 
           {/* Toggle Input Mode */}
           <div className="flex justify-between items-center mb-4">
-            <h5 className="text-[0.9rem] pl-[0.5rem] font- text-(--text)/80">
-              {inputMode == "text"
-                ? ""
-                : "Speak up your answer confident and clearly"}
+            <h5 className="text-sm pl-[0.5rem] font- text-(--text)/80 leading-4">
+              {inputMode == "text" ? "" : ""}
             </h5>
             <div className=" flex">
               <button
@@ -172,6 +171,12 @@ export default function InterviewPanel() {
           <CustomButton
             className="ml-auto"
             onClick={handleSubmit}
+            loadingTitle={[
+              "Processing...",
+              "Still working...",
+              "Almost done...",
+              "Just a second...",
+            ]}
             disabled={isProcessing || loading}
             loading={isProcessing || loading}
             title={
