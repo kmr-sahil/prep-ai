@@ -6,7 +6,7 @@ export const transcribeWithSarvam = async (blob: Blob): Promise<string> => {
     formData.append("file", blob, "audio.webm");
     formData.append("language_code", "en-IN");
 
-    const API_KEY = process.env.NEXT_PUBLIC_SARVAM_API_KEY || "";
+    const API_KEY = process.env.SARVAM_API_KEY || "";
 
     const res = await fetch("https://api.sarvam.ai/speech-to-text", {
       method: "POST",

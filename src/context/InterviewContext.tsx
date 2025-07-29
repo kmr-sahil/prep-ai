@@ -7,7 +7,7 @@ import { general, threeToFive, fiveToTen } from "@/constants/getQuestionsPrompt"
 
 // Setup Gemini
 const genAI = new GoogleGenAI({
-  apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY || "YOUR_API_KEY_HERE",
+  apiKey: process.env.GEMINI_API_KEY || "YOUR_API_KEY_HERE",
 });
 
 interface InterviewContextProps {
