@@ -37,7 +37,7 @@ export const InterviewProvider = ({
   children: React.ReactNode;
 }) => {
   const {profile} = useAuth();
-  const [questions, setQuestions] = useState<string[]>(["How are ypiu mff ?"]);
+  const [questions, setQuestions] = useState<string[]>([]);
   const [answers, setAnswers] = useState<string[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [loading, setLoading] = useState(false);

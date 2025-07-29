@@ -54,7 +54,7 @@ const AuthModal = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-(--primary)/10 bg-opacity-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 bg-(--muted)/60  flex items-center justify-center">
       <div className="bg-(--muted) border border-(--secondary) text-(--text) rounded-xl shadow-lg p-6 w-full max-w-sm relative">
         <button
           onClick={closeAuthModal}
