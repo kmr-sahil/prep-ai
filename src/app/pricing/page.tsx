@@ -3,7 +3,7 @@ import React from "react";
 
 function Page() {
   return (
-    <html>
+    <html suppressHydrationWarning lang="en">
       <head>
         <meta
           name="viewport"

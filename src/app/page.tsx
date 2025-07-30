@@ -16,7 +16,7 @@ export default function Home() {
           Beta Limited release — click to get more credits ?
         </Link>
         <h1 className="text-[1.5rem] md:text-[2.5rem] font-medium leading-[1.5rem] md:leading-[2.2rem]">
-          Crack Your Dream Job Before Someone Else Does
+          Crack your dream job before someone else does
         </h1>
         <h4>Only the prepared get hired. Start practicing now.</h4>
       </div>

@@ -46,6 +46,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         if (session?.user) {
           // Fetch profile
+          
           const { data, error } = await supabase
             .from("users")
             .select("credits")
@@ -54,6 +55,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
           if (!data || error) {
             // Insert default profile if not found
+            console.error("Profile not found, inserting default profile:", error);
             await supabase
               .from("users")
               .insert([{ id: session.user.id, credits: 2 }]);

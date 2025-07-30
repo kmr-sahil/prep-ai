@@ -8,5 +8,5 @@ export const decrementCredit = async (n:number) => {
     .update({ credits: n-1 })
     .eq('id', user?.id);
 
-    console.log("decrement ", n )
+    console.log("decrement ", n, "  ", data )
 };

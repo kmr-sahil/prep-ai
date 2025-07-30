@@ -8,6 +8,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "react-hot-toast";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,8 +34,6 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/logo.svg" type="image/svg+xml" />
-
-        
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative w-full mx-auto p-[0.8rem]`}
@@ -46,6 +45,7 @@ export default function RootLayout({
             <InterviewProvider>
               <Navbar />
               {children}
+              <Analytics />
             </InterviewProvider>
             <Footer />
           </AuthProvider>

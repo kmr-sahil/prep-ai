@@ -56,9 +56,9 @@ export default function Page() {
     if (!audioBlob) return;
     setIsProcessing(true);
     try {
-      const faster = await speedUpAudioBlob(audioBlob, 1.1);
-      console.log("Speed up complete:", faster);
-      setFastenedBlob(faster);
+      const { blob: spedUpBlob, duration } = await speedUpAudioBlob(audioBlob, 1.1);
+      console.log("Speed up complete:", spedUpBlob, "Duration:", duration);
+      setFastenedBlob(spedUpBlob);
     } catch (err) {
         console.error("Error speeding up audio:", err);
       alert("Failed to speed up audio!");

@@ -10,6 +10,7 @@ import { transcribeWithSarvam } from "@/utils/transcribeSarvam";
 import { transcribeAudioFile } from "@/utils/transcribEl";
 import React from "react";
 import toast from "react-hot-toast";
+import { speedUpAudioBlob } from "@/utils/audioFasten";
 
 type VoiceInputProps = {
   resetTrigger: number;
@@ -31,10 +32,15 @@ export default function VoiceInput({
   const handleStop = async (blob: Blob, duration: number) => {
     setIsProcessing(true);
     try {
+
+      const { blob: spedUpBlob, duration } = await speedUpAudioBlob(blob, 1.05)
+
+      console.log("Speeded up audio blob:", spedUpBlob, "Duration:", duration);
+
       const text =
-        duration < 29
-          ? await transcribeWithSarvam(blob)
-          : await transcribeAudioFile(blob);
+        duration <= 29
+          ? await transcribeWithSarvam(spedUpBlob)
+          : await transcribeAudioFile(spedUpBlob);
 
       const updated = (transcriptedText + " " + text).trim();
       setTranscriptedText(updated);

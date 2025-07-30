@@ -1,5 +1,5 @@
 // Utility: Speed up audio Blob by 1.2x and return as WAV Blob (in-browser)
-export async function speedUpAudioBlob(blob: Blob, multiplier: number): Promise<Blob> {
+export async function speedUpAudioBlob(blob: Blob, multiplier: number): Promise<{ blob: Blob, duration: number }> {
   // 1. Read original data
   const arrayBuffer = await blob.arrayBuffer();
   const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -19,8 +19,16 @@ export async function speedUpAudioBlob(blob: Blob, multiplier: number): Promise<
   source.start();
 
   const renderedBuffer = await offlineCtx.startRendering();
-  return audioBufferToWavBlob(renderedBuffer);
+
+  // Get new duration in seconds (AudioBuffer has duration property)
+  const newDuration = renderedBuffer.duration;
+
+  // Convert to WAV Blob
+  const newBlob = audioBufferToWavBlob(renderedBuffer);
+
+  return { blob: newBlob, duration: newDuration };
 }
+
 
 // --- Minimal WAV export: no dependencies needed! ---
 function audioBufferToWavBlob(buffer: AudioBuffer): Blob {

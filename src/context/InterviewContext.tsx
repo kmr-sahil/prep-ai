@@ -61,6 +61,7 @@ export const InterviewProvider = ({
       });
 
       // decrement the credit
+      console.log("Decrementing credit for profile:", profile);
       await decrementCredit(profile?.credits || 0)
 
       const json = JSON.parse(response.text || "[]");
@@ -107,7 +108,7 @@ export const InterviewProvider = ({
       const prompt = ` ${feedbackPrompt} ${qa} `.trim();
 
       const response = await genAI.models.generateContent({
-        model: "gemini-2.5-flash-lite-preview-06-17",
+        model: "gemini-2.0-flash-lite",
         contents: prompt,
       });
 
