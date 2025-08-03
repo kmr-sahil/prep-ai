@@ -67,6 +67,7 @@ export const InterviewProvider = ({
       const json = JSON.parse(response.text || "[]");
 
       if (Array.isArray(json)) {
+        console.log("Received questions:", json);
         setQuestions(json);
         setAnswers(new Array(json.length).fill(""));
         setActiveIndex(0);
