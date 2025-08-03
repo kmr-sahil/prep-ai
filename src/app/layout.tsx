@@ -38,18 +38,19 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative w-full mx-auto p-[0.8rem]`}
       >
-        <Toaster position="bottom-center" />
-        <ThemeProvider attribute="class">
-          <ThemeToggle />
-          <AuthProvider>
+        <AuthProvider>
+          <Toaster position="bottom-center" />
+          <ThemeProvider attribute="class">
+            <ThemeToggle />
+
             <InterviewProvider>
               <Navbar />
               {children}
               <Analytics />
             </InterviewProvider>
             <Footer />
-          </AuthProvider>
-        </ThemeProvider>
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );
