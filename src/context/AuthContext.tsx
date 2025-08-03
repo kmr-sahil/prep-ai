@@ -1,12 +1,20 @@
 "use client";
 import {
-  createContext, useContext, useEffect, useState, ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
 } from "react";
 import { supabase } from "../utils/supabase";
 import { User } from "@supabase/supabase-js";
 
-interface Profile { credits: number; }
+// Define the shape of profile data
+interface Profile {
+  credits: number;
+}
 
+// Define the context type
 type AuthContextType = {
   user: User | null | undefined;
   profile: Profile | null;
@@ -17,57 +25,64 @@ type AuthContextType = {
   closeAuthModal: () => void;
 };
 
+// Create context with undefined initially
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-interface AuthProviderProps { children: ReactNode; }
+interface AuthProviderProps {
+  children: ReactNode;
+}
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null | undefined>(undefined);
+  const [user, setUser] = useState<User | null | undefined>(undefined); // undefined = loading
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  // Helper function to robustly fetch profile
+  // Fetch profile helper with logs
   const fetchProfile = async (uid: string) => {
+    console.log(`[AuthProvider] fetchProfile started for user id: ${uid}`);
     const { data, error } = await supabase
-      .from("users").select("credits").eq("id", uid).single<Profile>();
+      .from("users")
+      .select("credits")
+      .eq("id", uid)
+      .single<Profile>();
+
     if (!data || error) {
+      console.error("[AuthProvider] Profile not found or error:", error);
+      console.log("[AuthProvider] Creating default profile with 2 credits");
       await supabase.from("users").insert([{ id: uid, credits: 2 }]);
       setProfile({ credits: 2 });
+      console.log("[AuthProvider] Default profile set");
     } else {
       setProfile(data);
+      console.log("[AuthProvider] Profile loaded:", data);
     }
   };
 
   useEffect(() => {
-    // Listen for INITIAL_SESSION to guarantee session recovery done
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (event === "INITIAL_SESSION") {
-          setUser(session?.user ?? null);
-          if (session?.user) {
-            await fetchProfile(session.user.id);
-            setIsAuthModalOpen(false);
-          } else {
-            setProfile(null);
-            setIsAuthModalOpen(true);
-          }
-        }
-        // You can also listen for SIGNED_IN/SIGNED_OUT here for live updates:
-        if (event === "SIGNED_OUT") {
+    const checkUserAndProfile = async () => {
+      console.log("[AuthProvider] Checking user with supabase.auth.getUser()");
+      try {
+        const { data } = await supabase.auth.getUser();
+        if (data?.user) {
+          console.log("[AuthProvider] User found:", data.user);
+          setUser(data.user);
+          await fetchProfile(data.user.id);
+          setIsAuthModalOpen(false);
+          console.log("[AuthProvider] Auth modal closed");
+        } else {
+          console.log("[AuthProvider] No user found, opening auth modal");
           setUser(null);
           setProfile(null);
           setIsAuthModalOpen(true);
         }
-        if (event === "SIGNED_IN") {
-          setUser(session?.user ?? null);
-          if (session?.user) {
-            await fetchProfile(session.user.id);
-            setIsAuthModalOpen(false);
-          }
-        }
+      } catch (error) {
+        console.error("[AuthProvider] Error checking user:", error);
+        setUser(null);
+        setProfile(null);
+        setIsAuthModalOpen(true);
       }
-    );
-    return () => { authListener.subscription.unsubscribe(); };
+    };
+    checkUserAndProfile();
   }, []);
 
   return (
@@ -78,8 +93,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
         isLoggedIn: !!user,
         isAuthModalOpen,
         hasCredits: profile?.credits || 0,
-        openAuthModal: () => setIsAuthModalOpen(true),
-        closeAuthModal: () => setIsAuthModalOpen(false),
+        openAuthModal: () => {
+          console.log("[AuthProvider] openAuthModal called");
+          setIsAuthModalOpen(true);
+        },
+        closeAuthModal: () => {
+          console.log("[AuthProvider] closeAuthModal called");
+          setIsAuthModalOpen(false);
+        },
       }}
     >
       {children}
