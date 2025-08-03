@@ -1,20 +1,12 @@
 "use client";
 import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
+  createContext, useContext, useEffect, useState, ReactNode,
 } from "react";
 import { supabase } from "../utils/supabase";
 import { User } from "@supabase/supabase-js";
 
-// Define the shape of profile data
-interface Profile {
-  credits: number;
-}
+interface Profile { credits: number; }
 
-// Define the context type
 type AuthContextType = {
   user: User | null | undefined;
   profile: Profile | null;
@@ -25,28 +17,20 @@ type AuthContextType = {
   closeAuthModal: () => void;
 };
 
-// Create context with undefined initially
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Props type for AuthProvider
-interface AuthProviderProps {
-  children: ReactNode;
-}
+interface AuthProviderProps { children: ReactNode; }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null | undefined>(undefined); // undefined = loading
+  const [user, setUser] = useState<User | null | undefined>(undefined);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  // Fetch profile (credits) by user id
+  // Helper function to robustly fetch profile
   const fetchProfile = async (uid: string) => {
     const { data, error } = await supabase
-      .from("users")
-      .select("credits")
-      .eq("id", uid)
-      .single<Profile>();
+      .from("users").select("credits").eq("id", uid).single<Profile>();
     if (!data || error) {
-      // Profile doesn't exist, create default
       await supabase.from("users").insert([{ id: uid, credits: 2 }]);
       setProfile({ credits: 2 });
     } else {
@@ -54,45 +38,36 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  // Initial eager session and profile fetch (fixes "must reload for credits" bug)
   useEffect(() => {
-    let isMounted = true; // Prevent state updates if unmounted
-    const getInitialSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        await fetchProfile(session.user.id);
-        setIsAuthModalOpen(false);
-      } else {
-        setProfile(null);
-        setIsAuthModalOpen(true);
-      }
-    };
-    getInitialSession();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  // Listen for all auth state changes (including login/logout/profile)
-  useEffect(() => {
+    // Listen for INITIAL_SESSION to guarantee session recovery done
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          await fetchProfile(session.user.id);
-          setIsAuthModalOpen(false);
-        } else {
+      async (event, session) => {
+        if (event === "INITIAL_SESSION") {
+          setUser(session?.user ?? null);
+          if (session?.user) {
+            await fetchProfile(session.user.id);
+            setIsAuthModalOpen(false);
+          } else {
+            setProfile(null);
+            setIsAuthModalOpen(true);
+          }
+        }
+        // You can also listen for SIGNED_IN/SIGNED_OUT here for live updates:
+        if (event === "SIGNED_OUT") {
+          setUser(null);
           setProfile(null);
           setIsAuthModalOpen(true);
         }
+        if (event === "SIGNED_IN") {
+          setUser(session?.user ?? null);
+          if (session?.user) {
+            await fetchProfile(session.user.id);
+            setIsAuthModalOpen(false);
+          }
+        }
       }
     );
-    return () => {
-      authListener?.subscription?.unsubscribe();
-    };
+    return () => { authListener.subscription.unsubscribe(); };
   }, []);
 
   return (
