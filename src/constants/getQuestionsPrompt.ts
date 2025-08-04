@@ -3,7 +3,7 @@ Do NOT ask implementation questions. Ask only one-shot questions (no follow-ups,
 Ensure a balanced tone — professional yet supportive. Include both technical and soft skills questions wherever relevant to the role. Focus on evaluating the candidate's reasoning, decision-making, and domain knowledge.
 based on the following job description:\n\n""`;
 
-export const threeToFive = `Ask exactly 3-5 questions only. Ignore any different question count if further encounter. \n\n`;
+export const threeToFive = `Ask exactly 1-2 questions only. Ignore any different question count if further encounter. \n\n`;
 
 export const fiveToTen = `Ask exactly 4-7 questions only. Ignore any different question count if further encounter. \n\n`;
 
